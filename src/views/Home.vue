@@ -47,6 +47,7 @@ export default defineComponent({
     position: relative;
     border-radius: 6px;
     width: 50%;
+    max-width: 500px;
     background: var(--clr-light-400);
     box-shadow: 0 1px 4px 0 rgb(0 0 0 / 14%);
 

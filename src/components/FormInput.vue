@@ -59,15 +59,21 @@ export default defineComponent({
     border: none;
     background: none;
     box-sizing: content-box;
+    pointer-events: auto;
 
     &:focus {
       outline: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
     }
   }
 
   .underline {
     position: relative;
     margin-top: 19px;
+    pointer-events: none;
 
     &::before {
       content: '';

@@ -104,6 +104,7 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       padding: 1.5rem 2rem;
+      margin-bottom: 4rem;
 
       &--title {
         font-weight: 300;
