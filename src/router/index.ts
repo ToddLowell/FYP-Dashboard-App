@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
+import PathNotFound from '../views/PathNotFound.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,6 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
+    meta: { requiresAuth: true },
     children: [
       {
         path: '',
@@ -26,6 +28,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'employees',
         name: 'Employees',
         component: () => import('../views/Dashboard/Employees.vue'),
+        meta: { isAdmin: true },
       },
       {
         path: 'notifications',
@@ -36,14 +39,43 @@ const routes: Array<RouteRecordRaw> = [
         path: 'maps',
         name: 'Maps',
         component: () => import('../views/Dashboard/Maps.vue'),
+        meta: { isAdmin: true },
       },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: PathNotFound,
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (localStorage.getItem('email')) {
+      next();
+      return;
+    }
+    next('/');
+  } else {
+    next();
+  }
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.isAdmin)) {
+    if (JSON.parse(localStorage.getItem('isAdmin') as string)) {
+      next();
+      return;
+    }
+    next('/');
+  } else {
+    next();
+  }
 });
 
 export default router;
