@@ -28,7 +28,10 @@
       <header class="header">
         <div class="header--title">{{ routeName }}</div>
         <div class="header--actions">
-          <mdicon name="bell" />
+          <router-link class="notification" to="/dashboard/notifications">
+            <mdicon name="bell" />
+            <span v-if="imageMissing" class="badge">1</span>
+          </router-link>
           <mdicon name="logout" @click="logout" />
         </div>
       </header>
@@ -47,6 +50,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const isAdmin = JSON.parse(localStorage.getItem('isAdmin') as string);
+    const imageMissing = !localStorage.getItem('imageLink');
 
     let routeName = ref(route.name);
 
@@ -63,6 +67,7 @@ export default defineComponent({
       routeName,
       logout,
       isAdmin,
+      imageMissing,
     };
   },
 });
@@ -125,8 +130,26 @@ export default defineComponent({
 
       &--actions {
         .mdi {
+          color: var(--clr-neutral-700);
           margin-left: 1.5rem;
           cursor: pointer;
+        }
+
+        .notification {
+          position: relative;
+        }
+
+        .badge {
+          position: absolute;
+          line-height: 1.2;
+          top: -10px;
+          right: -10px;
+          width: 20px;
+          height: 20px;
+          text-align: center;
+          border-radius: 50%;
+          background: red;
+          color: white;
         }
       }
     }
