@@ -109,6 +109,8 @@ export default defineComponent({
 
   .content {
     width: 100%;
+    display: flex;
+    flex-direction: column;
 
     .header {
       display: flex;

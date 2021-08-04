@@ -6,8 +6,8 @@
         <h1>Log In</h1>
       </div>
       <div class="spacer">
-        <FormInput v-model="email" label="Email address" name="email" type="text" />
-        <FormInput v-model="password" label="Password" name="password" type="password" />
+        <FormInput v-model="email" label="Email Address" name="email" type="email" required />
+        <FormInput v-model="password" label="Password" name="password" type="password" required />
         <FormButton>Log In</FormButton>
       </div>
     </form>

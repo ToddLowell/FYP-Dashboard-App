@@ -18,7 +18,6 @@ export default defineComponent({
 
 <style scoped>
 .backdrop {
-  content: '';
   display: block;
   position: absolute;
   top: 0;
