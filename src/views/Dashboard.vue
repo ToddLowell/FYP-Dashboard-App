@@ -11,7 +11,7 @@
         <mdicon name="account" />
         <span>User Profile</span>
       </router-link>
-      <router-link class="list-item" to="/dashboard/employees">
+      <router-link v-if="isAdmin" class="list-item" to="/dashboard/employees">
         <mdicon name="account-group" />
         <span>Employees</span>
       </router-link>
@@ -19,7 +19,7 @@
         <mdicon name="bell" />
         <span>Notifications</span>
       </router-link>
-      <router-link class="list-item" to="/dashboard/maps">
+      <router-link v-if="isAdmin" class="list-item" to="/dashboard/maps">
         <mdicon name="map-marker" />
         <span>Maps</span>
       </router-link>
@@ -29,7 +29,7 @@
         <div class="header--title">{{ routeName }}</div>
         <div class="header--actions">
           <mdicon name="bell" />
-          <mdicon name="logout" />
+          <mdicon name="logout" @click="logout" />
         </div>
       </header>
       <router-view />
@@ -39,20 +39,30 @@
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {},
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    const isAdmin = JSON.parse(localStorage.getItem('isAdmin') as string);
+
     let routeName = ref(route.name);
 
     watchEffect(() => {
       routeName.value = route.name;
     });
 
+    const logout = () => {
+      localStorage.clear();
+      router.replace('/');
+    };
+
     return {
       routeName,
+      logout,
+      isAdmin,
     };
   },
 });

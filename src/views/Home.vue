@@ -1,12 +1,13 @@
 <template>
+  <Loading :loading="loading" />
   <div class="container">
-    <form class="login-form" @submit.prevent="">
+    <form class="login-form" @submit.prevent="logIn">
       <div class="form-header">
         <h1>Log In</h1>
       </div>
       <div class="spacer">
-        <FormInput label="Email address" name="email" type="text" />
-        <FormInput label="Passwords" name="password" type="password" />
+        <FormInput v-model="email" label="Email address" name="email" type="text" />
+        <FormInput v-model="password" label="Password" name="password" type="password" />
         <FormButton>Log In</FormButton>
       </div>
     </form>
@@ -14,20 +15,58 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onBeforeMount } from 'vue';
+import { useRouter } from 'vue-router';
 import FormInput from '../components/FormInput.vue';
 import FormButton from '../components/FormButton.vue';
+import Loading from '../components/Loading.vue';
+import axios from '../axios';
 
 export default defineComponent({
   components: {
     FormInput,
     FormButton,
+    Loading,
   },
   setup() {
-    const focused = ref(false);
+    const router = useRouter();
+    const email = ref('');
+    const password = ref('');
+    const loading = ref(false);
+
+    // redirect if already logged in
+    onBeforeMount(() => {
+      if (localStorage.getItem('email')) router.replace('/dashboard');
+    });
+
+    const logIn = () => {
+      loading.value = true;
+
+      axios
+        .post('/users/login', {
+          email: email.value,
+          password: password.value,
+        })
+        .then((data) => {
+          const { email, first_name, last_name, is_admin, image_link } = data.data;
+
+          localStorage.setItem('email', email);
+          localStorage.setItem('fName', first_name || '');
+          localStorage.setItem('lName', last_name || '');
+          localStorage.setItem('isAdmin', is_admin);
+          localStorage.setItem('imageLink', image_link || '');
+
+          router.replace('/dashboard');
+        })
+        .catch((err) => alert(err.response.data))
+        .finally(() => (loading.value = false));
+    };
 
     return {
-      focused,
+      email,
+      password,
+      loading,
+      logIn,
     };
   },
 });
