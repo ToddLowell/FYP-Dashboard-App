@@ -14,7 +14,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 button {
   margin-top: var(--spacer);
   padding: 0.5em 1.5em;
