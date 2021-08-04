@@ -120,7 +120,10 @@ export default defineComponent({
     const submitForm = async () => {
       loading.value = true;
 
-      if (file.value) await uploadImage();
+      if (file.value) {
+        await uploadImage();
+        localStorage.setItem('imageLink', image_link.value);
+      }
 
       axios
         .patch('/user', {
@@ -197,6 +200,7 @@ export default defineComponent({
 
     img {
       height: 100%;
+      margin: 0 auto;
     }
   }
 }
