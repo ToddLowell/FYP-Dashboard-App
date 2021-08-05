@@ -25,7 +25,7 @@ import FormInput from '../../components/FormInput.vue';
 import FormButton from '../../components/FormButton.vue';
 import Loading from '../../components/Loading.vue';
 import axios from '../../axios';
-import AWS from 'aws-sdk';
+/* global AWS */
 
 export default defineComponent({
   components: {
@@ -42,8 +42,10 @@ export default defineComponent({
     const file = ref<File>();
 
     // initialize the Region and Amazon Cognito credentials provider
+    // @ts-expect-error CDN
     AWS.config.update({
       region: 'ap-southeast-1',
+      // @ts-expect-error CDN
       credentials: new AWS.CognitoIdentityCredentials({
         IdentityPoolId: 'ap-southeast-1:9717d2f7-e484-41cf-820c-a2f48fa6a8f5',
       }),
@@ -64,6 +66,7 @@ export default defineComponent({
       document.getElementById('lname')?.dispatchEvent(new Event('input'));
 
       if (image_link.value) {
+        // @ts-expect-error CDN
         const s3 = new AWS.S3();
 
         s3.getObject(
@@ -71,6 +74,7 @@ export default defineComponent({
             Bucket: 'fyp.raaedkabir.com',
             Key: image_link.value,
           },
+          // @ts-expect-error CDN
           (err, data) => {
             if (err) console.error('Error retrieving profile image', err.message);
 
@@ -102,6 +106,7 @@ export default defineComponent({
       const key = `images/${new Date().toISOString()}_${file.value!.name}`;
 
       try {
+        // @ts-expect-error CDN
         const data = await new AWS.S3.ManagedUpload({
           params: {
             Bucket: 'fyp.raaedkabir.com',
