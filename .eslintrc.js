@@ -26,5 +26,6 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 };

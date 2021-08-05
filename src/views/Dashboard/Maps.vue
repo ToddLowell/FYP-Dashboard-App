@@ -19,7 +19,7 @@ interface PlaceConfig {
 
 export default defineComponent({
   setup() {
-    const gMap = ref(null);
+    const gMap = ref();
     const places = [
       {
         location: {

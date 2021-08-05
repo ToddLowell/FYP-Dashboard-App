@@ -41,7 +41,14 @@ export default defineComponent({
   },
   setup() {
     const loading = ref(false);
-    const rows = ref([]);
+    const rows = ref<
+      {
+        user_id: number;
+        email: string;
+        first_name: string;
+        last_name: string;
+      }[]
+    >([]);
     const toggleAddUser = ref(false);
 
     onMounted(() => {

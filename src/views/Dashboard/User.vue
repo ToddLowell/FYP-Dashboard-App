@@ -25,7 +25,7 @@ import FormInput from '../../components/FormInput.vue';
 import FormButton from '../../components/FormButton.vue';
 import Loading from '../../components/Loading.vue';
 import axios from '../../axios';
-/* global AWS */
+import AWS from 'aws-sdk';
 
 export default defineComponent({
   components: {
@@ -50,10 +50,10 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      email.value = localStorage.getItem('email');
-      fname.value = localStorage.getItem('fName');
-      lname.value = localStorage.getItem('lName');
-      image_link.value = localStorage.getItem('imageLink');
+      email.value = localStorage.getItem('email') || '';
+      fname.value = localStorage.getItem('fName') || '';
+      lname.value = localStorage.getItem('lName') || '';
+      image_link.value = localStorage.getItem('imageLink') || '';
 
       // dispatch input event to update the v-model binding
       (document.getElementById('email') as HTMLInputElement).value = email.value;
@@ -74,16 +74,16 @@ export default defineComponent({
           (err, data) => {
             if (err) console.error('Error retrieving profile image', err.message);
 
-            function encode64(data) {
-              var str = data.reduce(function (a, b) {
+            const encode64 = (data: Uint8Array) => {
+              var str = data.reduce((a, b) => {
                 return a + String.fromCharCode(b);
               }, '');
               return btoa(str).replace(/.{76}(?=.)/g, '$&\n');
-            }
+            };
 
             (document.getElementById('user-photo') as HTMLInputElement).src = `data:${
               data.ContentType
-            };base64,${encode64(data.Body)}`;
+            };base64,${encode64(data.Body as Uint8Array)}`;
           }
         );
       }
@@ -99,7 +99,7 @@ export default defineComponent({
     };
 
     const uploadImage = async () => {
-      const key = `images/${new Date().toISOString()}_${file.value.name}`;
+      const key = `images/${new Date().toISOString()}_${file.value!.name}`;
 
       try {
         const data = await new AWS.S3.ManagedUpload({
@@ -107,7 +107,7 @@ export default defineComponent({
             Bucket: 'fyp.raaedkabir.com',
             Key: key,
             Body: file.value,
-            ContentType: file.value.type,
+            ContentType: file.value!.type,
           },
         }).promise();
 
